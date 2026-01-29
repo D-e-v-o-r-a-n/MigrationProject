@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-deployment
+  labels:
+    app: minecraft
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft
+  template:
+    metadata:
+      labels:
+        app: minecraft
+    spec:
+      containers:
+      - name: minecraft
+        image: itzg/minecraft-server:latest
+        ports:
+        - containerPort: 25565 # this will be a hostPort (cannot afford a downtime right now), I am aware that it will make it available only on this node, but I am in a single node setup - in this particular instance it is okay and allows me to use the default port for my local CNAME record
+        env:
+        - name: EULA
+          value: "true"
+        - name: TYPE
+          value: "PAPER"
+        - name: VERSION
+          value: "1.21.10"
+        - name: SERVER_NAME
+          value: "Homeserver"
+        - name: MOTD
+          value: "Welcome to the homeserver!"
+        - name: MAX_PLAYERS
+          value: "10"
+        - name: DIFFICULTY
+          value: "normal"
+        - name: GAMEMODE
+          value: "survival"
+        - name: PVP
+          value: "true"
+        - name: MEMORY
+          value: "10G"
+        - name: VIEW_DISTANCE
+          value: "26"
+        - name: ONLINE_MODE
+          value: "true"
+        - name: ENABLE_ROLLING_LOGS
+          value: "true"
+        - name: SPAWN_PROTECTION
+          value: "16"
+        - name: MAX_WORLD_SIZE
+          value: "29999984"
+        - name: ALLOW_NETHER
+          value: "true"
+        - name: ANNOUNCE_PLAYER_ACHIEVEMENTS
+          value: "true"
+        - name: GENERATE_STRUCTURES
+          value: "true"
+        resources:
+          limits:
+            cpu: "10"
+            memory: "12G"
+          requests:
+            cpu: "6"
+            memory: "10G"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-pvc
+
