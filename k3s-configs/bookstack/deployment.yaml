@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstack-deployment
+  labels:
+    app: bookstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookstack
+  template:
+    metadata:
+      labels:
+        app: bookstack
+
+    spec:
+      containers:
+      - name: bookstack
+        image: lscr.io/linuxserver/bookstack
+        ports:
+        - containerPort: 80
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Europe/Warsaw"
+        - name: APP_URL
+          value: "http://192.168.0.6:32006"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: bookstack-secret
+              key: APP_KEY
+        - name: DB_HOST
+          value: "bookstack-db-service"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: bookstack-secret
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: bookstack-secret
+              key: DB_PASSWORD
+        - name: DB_DATABASE
+          value: "bookstack-mariadb"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: bookstack-config-pvc
+
