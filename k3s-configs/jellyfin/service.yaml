@@ -10,4 +10,4 @@ spec:
     - name: http
       port: 8096
       targetPort: 8096
-      nodePort: 32000 
+      nodePort: 30000 

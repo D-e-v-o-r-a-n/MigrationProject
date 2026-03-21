@@ -12,7 +12,7 @@ spec:
     grafana:
       service:
         type: NodePort
-        nodePort: 30086
+        nodePort: 30002
     prometheus:
       service:
         type: NodePort

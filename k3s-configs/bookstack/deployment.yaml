@@ -28,7 +28,7 @@ spec:
         - name: TZ
           value: "Europe/Warsaw"
         - name: APP_URL
-          value: "http://192.168.0.6:32006"
+          value: "http://bookstack.local"
         - name: APP_KEY
           valueFrom:
             secretKeyRef:
