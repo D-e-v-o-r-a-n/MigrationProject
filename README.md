@@ -53,6 +53,10 @@ After migration of these two services, came the moment to set up something new t
 Once I had a couple of services migrated/set-up and usable I wanted to increase the observability and control over them, therefore I created a Helm Chart with a new namespace to quickly install and manage Prometheus + Grafana stack. After everything was successfully working I added a new custom Grafana dashboard which includes basic metrics of my services in readable format. Naturally during the initial setup the pods were restarted a few times and I learned the hard way that the custom dashboards are not going to be retained by themselves...
 
 This pushed me to find a solution - my 2nd custom dashboard has been exported to json and saved in a ConfigMap which is loaded alongside Grafana itself.
+<img width="1821" height="915" alt="image" src="https://github.com/user-attachments/assets/5eca3513-1a84-4ddf-a185-ffbf44f53100" />
+
+
+
 
 
 The natural next step was hardening and securing the services - for that I introduced HTTPS with Traefik and Let's Encrypt as well as Vaultwarden - (selfhosted) password manager ensuring strong and varied password for the services (and not only them).
