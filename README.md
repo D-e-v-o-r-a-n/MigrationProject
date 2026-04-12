@@ -12,14 +12,12 @@ Repository to track and document project of migrating homeserver services to kub
 ```mermaid
 flowchart TD
     A[Client] e1@-->|Internet| B(Wireguard)
-    B e2@--> C{Home Server}
-    C e3@--> D{ Traefik }
-    D e4@--> Jellyfin
-    D e5@--> Minecraft
+    B e2@--> C{ Traefik }
+    C e4@--> Jellyfin
+    C e5@--> Minecraft
 
   e1@{ animate: yeah }
   e2@{ animate: yeah }
-  e3@{ animate: yeah }
   e4@{ animate: yeah }
   e5@{ animate: yeah }
 ```
@@ -64,8 +62,7 @@ The natural next step was hardening and securing the services - for that I intro
 ```mermaid
 flowchart TD
     A[Clients] e1@==>|Internet| B(Wireguard)
-    B e2@==> C[Home Server]
-    C e3@==> D{Traefik with HTTPS}
+    B e3@==> D{Traefik with HTTPS}
     D e4@--> E[Docker compose]
     E e5@--> G[Crucial services - DNS, Vaultwarden]
     D e6@--> F[k3s]
@@ -74,7 +71,6 @@ flowchart TD
 
 
   e1@{ animate: yeah }
-  e2@{ animate: yeah }
   e3@{ animate: yeah }
   e4@{ animate: yeah }
   e5@{ animate: yeah }
