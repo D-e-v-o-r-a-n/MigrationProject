@@ -1,4 +1,4 @@
-
+![k3s version](https://img.shields.io/badge/-k3s%20v.1.34-black?logo=kubernetes)
 ![docker](https://img.shields.io/badge/-docker-black?logo=docker)
 ![Prometheus](https://img.shields.io/badge/-Prometheus-black?logo=prometheus)
 ![Grafana](https://img.shields.io/badge/-Grafana-black?logo=grafana)
@@ -41,12 +41,14 @@ To make things easier I copied the k3s config to ~/.kube so sudo would not be ne
 And with that checking 'kubectl get nodes' to see everything working properly.
 
 ### Jellyfin
-Jellyfin is an open-source media managment solution. I decided Jellyfin is going to be the first one to migrate to k3s. Here I was first exposed to concepts such as pv/pvc so I adpted my existing docker compose configuration to match k3s's logic. While doing that I had an issue with file location, because in docker compose the /media subdirectories were mounted using volume bind so /media/music became /music inside of the container. When the config has been copied and in k3s /media has been set as one persistent volume, issues occurred since the pod has been searching for /music. Quick comparison with 
+Jellyfin is an open-source media managment solution. I decided Jellyfin is going to be the first one to migrate to k3s. 
+
+Here I was first exposed to concepts such as pv/pvc so I adpted my existing docker compose configuration to match k3s's logic. While doing that I had an issue with file location, because in docker compose the /media subdirectories were mounted using volume bind so /media/music became /music inside of the container. When the config has been copied and in k3s /media has been set as one persistent volume, issues occurred since the pod has been searching for /music. Quick comparison with 
 `docker exec -it` and `kubectl exex -it <pod> -- sh`
 respectively helped to pinpoint the issue and change to desired paths.
 
 
-### Two Traefiks issue
+### Two Traefiks issue ![traefik](https://img.shields.io/badge/-Traefik-black?logo=traefikproxy)
 Since k3s comes with Traefik by default and I happened to use Traefik myself in docker-compose, like I mentioned in the beginning, they both started fighting for ports 80 and 443. 
 
 That was a pretty big problem for me since I wanted to run services on both docker-compose and k3s and having to choose between both was not really an option. I didn't want to lose the easy domain routing for the critical docker-compose services, but just as much did not like the idea of setting up all k3s services with only the local IPs exposed - it wouldn't look very professional and stable if I told somebody that they can connect to my Jellyfin, just need to put http://192.168.0.9:8096 in the browser. It has been quite a hassle, I've been even thinking about running two Traefiks simultaneously for each, but quickly came to the conclusion that that is largely impractical.
