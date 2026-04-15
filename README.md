@@ -1,10 +1,10 @@
 ![k3s version](https://img.shields.io/badge/-k3s%20v.1.34-black?logo=kubernetes)
-![docker](https://img.shields.io/badge/-docker-black?logo=docker)
+![docker](https://img.shields.io/badge/-Docker-black?logo=docker)
 ![Prometheus](https://img.shields.io/badge/-Prometheus-black?logo=prometheus)
 ![Grafana](https://img.shields.io/badge/-Grafana-black?logo=grafana)
 ![traefik](https://img.shields.io/badge/-Traefik-black?logo=traefikproxy)
-![Bookstack](https://img.shields.io/badge/-bookstack-black?logo=bookstack)
-![Jellyfin](https://img.shields.io/badge/-jellyfin-black?logo=jellyfin)
+![Bookstack](https://img.shields.io/badge/-Bookstack-black?logo=bookstack)
+![Jellyfin](https://img.shields.io/badge/-Jellyfin-black?logo=jellyfin)
 
 # Purpose
 Repository to track and document project of migrating homeserver services to kubernetes (k3s)
@@ -42,7 +42,7 @@ To make things easier I copied the k3s config to ~/.kube so sudo would not be ne
 
 And with that checking 'kubectl get nodes' to see everything working properly.
 
-### Jellyfin ![Jellyfin](https://img.shields.io/badge/-jellyfin-black?logo=jellyfin)
+### Jellyfin ![Jellyfin](https://img.shields.io/badge/-Jellyfin-black?logo=jellyfin)
 
 Jellyfin is an open-source media managment solution. I decided Jellyfin is going to be the first one to migrate to k3s. 
 
@@ -67,7 +67,7 @@ The next thing I did was migrating a minecraft server (Cannot have a real homela
 I am aware that it binds the deployment to this node specifically, but since it is a single-node setup (for now at least), that is the most practical option.
 
 
-### Bookstack ![Bookstack](https://img.shields.io/badge/-bookstack-black?logo=bookstack)
+### Bookstack ![Bookstack](https://img.shields.io/badge/-Bookstack-black?logo=bookstack)
 
 After migration of these two services, came the moment to set up something new that would help organizing and documenting this project and all projects in the future, and for that I chose Bookstack. The setup process was similar as previous services - writing deployments, setting up pv and pvc, but here I also got to use another type of Kubernetes object - Secret. I created it so I could still upload the deployment manifest to github without an alarming secret leak (Also added the secrets to gitignore since not doing that would be counterproductive).
 
