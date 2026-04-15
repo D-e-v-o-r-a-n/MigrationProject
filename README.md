@@ -27,20 +27,24 @@ flowchart TD
 
 I have decided to improve my infrastructure by migrating some of it to the production-like environment. At first, everything was running on docker compose - which yes, is sufficient for home networks, but it does not allow for using helm charts, creating clearer observability with tools such as Prometheus + Grafana, future transition to multi-node setup and familiarizing with patterns that reflect production Kubernetes environments. 
 
-Important to note that I did not move all of the infrastructure, mainly the critical parts - Pihole + Unbound as DNS, Wireguard as a VPN and Traefik to route all that.
+Important to note that I did not move all of the infrastructure, mainly the critical parts - Pihole + Unbound as DNS, Wireguard as a VPN and Traefik to route all, services stay on the docker-compose (At least at this time).
 
 Firstly I backed up all of the persistent data I would like stored (while Kubernetes itself might not delete it, I could - always better safe then sorry).
 
 ### Kubernetes ![k3s version](https://img.shields.io/badge/-k3s%20v.1.34-black?logo=kubernetes)
 
 
-Then I created the git repository on github (this one) to track all of the changes and installed k3s.
+I created the git repository on github (this one) to track all of the changes and installed k3s - lightweight distribution of kubernetes more suitable for such environments as mine.
+
 To make things easier I copied the k3s config to ~/.kube so sudo would not be necessary every time.
 
 And with that checking 'kubectl get nodes' to see everything working properly.
 
-
-First thing I did was moving Jellyfin to k3s. Here I was first exposed to concepts such as pv/pvc so I adpted my configuration to match k3s's logic. While doing that I had an issue with file location, because in docker compose the /media subdirectories were mounted using volume bind so /media/music became /music inside of the container. When the config has been copied and in k3s /media has been set as one persistent volume, issues occurred since the pod has been searching for /music. Quick comparison with docker exec -it/kubectl exex -it <pod> -- sh respectively helped to pinpoint the issue and change to desired paths.
+### Jellyfin
+First thing I did was moving Jellyfin to k3s. Here I was first exposed to concepts such as pv/pvc so I adpted my existing docker compose configuration to match k3s's logic. While doing that I had an issue with file location, because in docker compose the /media subdirectories were mounted using volume bind so /media/music became /music inside of the container. When the config has been copied and in k3s /media has been set as one persistent volume, issues occurred since the pod has been searching for /music. Quick comparison with 
+`docker exec -it` 
+`kubectl exex -it <pod> -- sh`
+respectively helped to pinpoint the issue and change to desired paths.
 
 Here I got another issue - since k3s comes with Traefik and I happened to use Traefik myself in docker-compose, like I mentioned in the beginning, they both started fighting for ports 80 and 443. That was a pretty big problem for me since I wanted to run services on both docker-compose and k3s and having to choose between both was not really an option. I didn't want to lose the easy domain routing for the critical docker-compose services, but just as much did not like the idea of setting up all k3s services with only the local IPs exposed - it wouldn't look very professional and stable if I told somebody that they sure can connect to my jellyfin, just need to put http://192.168.0.9:8096 in the browser. It has been quite a hassle, I've been even thinking about running two traefiks simultaneously for each, but quickly came to the conclusion that that is largely impractical. Luckily I found out that one Traefik can in fact route services that are exposed by the other part of the infrastructure. After that realization I quickly disabled the k3s's built-in Traefik in favor of already set up docker-compose one. With this approach I do need to set up Traefik routers for each of kubernetes service for it to work as intended, but honestly I would be doing that just with labels anyway so it is not such a problem for me personally and I have resolved this longstantding problem.
 
