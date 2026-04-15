@@ -55,11 +55,24 @@ That was a pretty big problem for me since I wanted to run services on both dock
 
  Luckily I found out that one Traefik can in fact route services that are exposed by the other part of the infrastructure. After that realization I quickly disabled the k3s's built-in Traefik in favor of already set up docker-compose one. With this approach I do need to set up Traefik routers for each of kubernetes services for it to work as intended, but honestly I would be doing that just with labels anyway so it is not such a problem for me personally and I have resolved this longstantding issue.
 
-The next thing I did was migrating a minecraft server (Cannot have a real homelab without one of those, right?). This one went similarly to jellyfin, without bigger issues. I did however make one more change to it in a later commit - at first I exposed it via containerPort + nodePort, but I decided to change it to the hostPort instead. The reason for that is convinience - at first it has been exposed on nodePort:30002 via a service which meant that anyone that would like connecting, would have to type in <nodeIP>:30002 which can get quite lengthy. Here comes the hostPort, by exposing the container on the default minecraft port on the host, now I could use a more convinient and prettier domain, like minecraft.local with no need of specyfing ports. I am aware that it binds the deployment to this node specifically, but since it is a single-node setup (for now at least), that is the most practical option.
 
-After migration of these two services, came the moment to set up something new that would help organizing and documenting this project and all projects in the future and for that I chose Bookstack. The setup process was similar as previous services - writing deployments, setting up pv and pvc, but here I also got to use another type of Kubernetes object - Secret. I created it so I could still upload the deployment manifest to github without an alarming secret leak (Also added the secrets to gitignore since not doing that would be counterproductive).
+### Minecraft
+The next thing I did was migrating a minecraft server (Cannot have a real homelab without one of those, right?). This one went similarly to jellyfin, without bigger issues.
 
-Once I had a couple of services migrated/set-up and usable I wanted to increase the observability and control over them, therefore I created a Helm Chart with a new namespace to quickly install and manage Prometheus + Grafana stack. After everything was successfully working I added a new custom Grafana dashboard which includes basic metrics of my services in readable format. Naturally during the initial setup the pods were restarted a few times and I learned the hard way that the custom dashboards are not going to be retained by themselves...
+ I did however make one more change to it in a later commit - at first I exposed it via containerPort + nodePort, but I decided to change it to the hostPort instead. The reason for that is convinience - at first it has been exposed on nodePort:30002 via a service which meant that anyone that would like connecting, would have to type in <nodeIP>:30002 which can get quite lengthy. Here comes the hostPort, by exposing the container on the default minecraft port on the host, now I could use a more convinient and prettier domain, like minecraft.local pointing to the hostIp with no need of specyfing ports. 
+
+I am aware that it binds the deployment to this node specifically, but since it is a single-node setup (for now at least), that is the most practical option.
+
+
+### Bookstack 
+After migration of these two services, came the moment to set up something new that would help organizing and documenting this project and all projects in the future, and for that I chose Bookstack. The setup process was similar as previous services - writing deployments, setting up pv and pvc, but here I also got to use another type of Kubernetes object - Secret. I created it so I could still upload the deployment manifest to github without an alarming secret leak (Also added the secrets to gitignore since not doing that would be counterproductive).
+
+
+### Prometheus + Grafana ![Prometheus](https://img.shields.io/badge/-Prometheus-black?logo=prometheus)
+![Grafana](https://img.shields.io/badge/-Grafana-black?logo=grafana)
+Once I had a couple of services migrated/set-up and usable I wanted to increase the observability and control over them, therefore I created a Helm Chart with a new namespace to quickly install and manage Prometheus + Grafana stack. After everything was successfully working I added a new custom Grafana dashboard which includes basic metrics of my services in readable format.
+
+ Naturally during the initial setup, the pods were restarted a few times and I learned the hard way that the custom dashboards are not going to be retained by themselves...
 
 This pushed me to find a solution - my 2nd custom dashboard has been exported to json and saved in a ConfigMap which is loaded alongside Grafana itself.
 <img width="1821" height="915" alt="image" src="https://github.com/user-attachments/assets/5eca3513-1a84-4ddf-a185-ffbf44f53100" />
@@ -67,9 +80,13 @@ This pushed me to find a solution - my 2nd custom dashboard has been exported to
 
 
 
+### Security 
+The natural next step was hardening and securing the services - for that I introduced HTTPS with Traefik and Let's Encrypt as well as Vaultwarden, a (selfhosted) password manager ensuring strong and varied password for the services (and not only them).
 
-The natural next step was hardening and securing the services - for that I introduced HTTPS with Traefik and Let's Encrypt as well as Vaultwarden - (selfhosted) password manager ensuring strong and varied password for the services (and not only them).
+This required changing entrypoints to websecure - port 443, setting up cert resolver in Traefik and setting up a public domain, allowing Let's Encrypt perform an acme challenge.
 
+
+### Current state
 ```mermaid
 flowchart TD
     A[Clients] e1@==>|Internet| B(Wireguard)
@@ -91,3 +108,10 @@ flowchart TD
   e6@{ animate: yeah }
 
 ```
+
+This is how the server setup looks after completing this project - infrastructure is clearly divided, easier to monitor with Grafana and more secure with HTTPS certificates.
+
+Being my private infrastructure, it is used daily and will still be developed over time. Some of the possible future improvements:
+- setting up services with a privately owned domain
+- moving the rest of docker compose to a specific k3s namespace
+- setting up another node to learn multi-node operations
