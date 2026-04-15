@@ -119,3 +119,4 @@ Being my private infrastructure, it is used daily and will still be developed ov
 - setting up services with a privately owned domain
 - moving the rest of docker compose to a specific k3s namespace
 - setting up another node to learn multi-node operations
+- running private git server like Gitea/Gitlab Community Edition
