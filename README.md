@@ -36,7 +36,7 @@ Firstly I backed up all of the persistent data I would like stored (while Kubern
 ### Kubernetes ![k3s version](https://img.shields.io/badge/-k3s%20v.1.34-black?logo=kubernetes)
 
 
-I created the git repository on github (this one) to track all of the changes and installed k3s - lightweight distribution of kubernetes more suitable for such environments as mine.
+I created the git repository on github (this one) to track all of the changes and installed k3s - lightweight distribution of kubernetes more suitable for environments like mine.
 
 To make things easier I copied the k3s config to ~/.kube so sudo would not be necessary every time.
 
