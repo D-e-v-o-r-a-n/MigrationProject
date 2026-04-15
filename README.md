@@ -5,7 +5,6 @@
 ![traefik](https://img.shields.io/badge/-Traefik-black?logo=traefikproxy)
 ![Bookstack](https://img.shields.io/badge/-bookstack-black?logo=bookstack)
 ![Jellyfin](https://img.shields.io/badge/-jellyfin-black?logo=jellyfin)
-![Minecraft](https://img.shields.io/badge/-minecraft-black?logo=minecraft)
 
 # Purpose
 Repository to track and document project of migrating homeserver services to kubernetes (k3s)
@@ -43,7 +42,8 @@ To make things easier I copied the k3s config to ~/.kube so sudo would not be ne
 
 And with that checking 'kubectl get nodes' to see everything working properly.
 
-### Jellyfin
+### Jellyfin ![Jellyfin](https://img.shields.io/badge/-jellyfin-black?logo=jellyfin)
+
 Jellyfin is an open-source media managment solution. I decided Jellyfin is going to be the first one to migrate to k3s. 
 
 Here I was first exposed to concepts such as pv/pvc so I adpted my existing docker compose configuration to match k3s's logic. While doing that I had an issue with file location, because in docker compose the /media subdirectories were mounted using volume bind so /media/music became /music inside of the container. When the config has been copied and in k3s /media has been set as one persistent volume, issues occurred since the pod has been searching for /music. Quick comparison with 
@@ -67,7 +67,8 @@ The next thing I did was migrating a minecraft server (Cannot have a real homela
 I am aware that it binds the deployment to this node specifically, but since it is a single-node setup (for now at least), that is the most practical option.
 
 
-### Bookstack 
+### Bookstack ![Bookstack](https://img.shields.io/badge/-bookstack-black?logo=bookstack)
+
 After migration of these two services, came the moment to set up something new that would help organizing and documenting this project and all projects in the future, and for that I chose Bookstack. The setup process was similar as previous services - writing deployments, setting up pv and pvc, but here I also got to use another type of Kubernetes object - Secret. I created it so I could still upload the deployment manifest to github without an alarming secret leak (Also added the secrets to gitignore since not doing that would be counterproductive).
 
 
