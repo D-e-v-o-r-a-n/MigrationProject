@@ -3,6 +3,9 @@
 ![Prometheus](https://img.shields.io/badge/-Prometheus-black?logo=prometheus)
 ![Grafana](https://img.shields.io/badge/-Grafana-black?logo=grafana)
 ![traefik](https://img.shields.io/badge/-Traefik-black?logo=traefikproxy)
+![Bookstack](https://img.shields.io/badge/-bookstack-black?logo=bookstack)
+![Jellyfin](https://img.shields.io/badge/-jellyfin-black?logo=jellyfin)
+![Minecraft](https://img.shields.io/badge/-minecraft-black?logo=minecraft)
 
 # Purpose
 Repository to track and document project of migrating homeserver services to kubernetes (k3s)
