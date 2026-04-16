@@ -116,7 +116,7 @@ flowchart TD
 This is how the server setup looks after completing this project - infrastructure is clearly divided, easier to monitor with Grafana and more secure with HTTPS certificates.
 
 Being my private infrastructure, it is used daily and will still be developed over time. Some of the possible future improvements:
-- setting up services with a privately owned domain
+- setting up services with a privately owned public domain (that is already done as for making this change)
 - moving the rest of docker compose to a specific k3s namespace
 - setting up another node to learn multi-node operations
 - running private git server like Gitea/Gitlab Community Edition
